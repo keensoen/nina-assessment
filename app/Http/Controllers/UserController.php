@@ -15,13 +15,16 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if($request->has('query')){
-            $data = User::with(['books'])->orderBy('name', 'desc')->where(function($q) {
-                $q->whereName(request('query'))->orWhere(function($x){
-                    $x->age(request('query'))->gender(request('query'));
-                });
-            })->whereHas('books', function($q){
-                $q->where('title', request('query'));
-            });
+            $query = request('query');
+
+            $data = User::with(['books' => function($z) use($query) {
+                    $z->orWhere('title', 'like', '%'.$query.'%');
+                }])->orderBy('name', 'desc')->where(function($q) use($query) {
+                    $q->where('name', 'like', '%'.$query.'%')
+                        ->orWhere(function($x) use($query) {
+                            $x->orWhere->age($query)->orWhere->gender($query);
+                    });
+                })->get();
 
             return $data;
         }
