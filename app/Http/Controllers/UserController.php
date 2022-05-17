@@ -12,9 +12,21 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::get();
+        if($request->has('query')){
+            $data = User::with(['books'])->orderBy('name', 'desc')->where(function($q) {
+                $q->whereName(request('query'))->orWhere(function($x){
+                    $x->age(request('query'))->gender(request('query'));
+                });
+            })->whereHas('books', function($q){
+                $q->where('title', request('query'));
+            });
+
+            return $data;
+        }
+
+        $users = User::with(['books'])->get();
 
         return $users;
     }
