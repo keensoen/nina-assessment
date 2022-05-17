@@ -50,4 +50,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Book::class);
     }
+
+    public function scopeAge($query, $ageGroup)
+    {
+        return $query->where('age', $ageGroup);
+    }
+
+    public function scopeGender($query, $gender)
+    {
+        return $query->where('gender', $gender);
+    }
 }
