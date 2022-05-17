@@ -21,9 +21,9 @@ class BookFactory extends Factory
 
         return [
             'user_id'   =>  $this->faker->randomElement($users),
-            'title' =>  $this->faker->realText(),
+            'title' =>  $this->faker->sentence(),
             'isbn'  => $this->faker->isbn13(),
-            'description'   =>  $this->faker->sentences(4),
+            'description'   =>  $this->faker->realText(),
         ];
     }
 }
